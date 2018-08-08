@@ -222,7 +222,7 @@ xiaomiGatewayPassword = "gbbwsi3apkgd1ls2"
 proc connectToXiaomi() =
   ## You neeed to connect as the first thing
 
-  ()
+  xiaomiConnect()
 
 
 proc getGatewayInfo() =
