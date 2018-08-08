@@ -4,17 +4,9 @@ This Nim package includes proc's for working with Xiaomi devices.
 # Requirements
 **Nim:**
 - Nim >= 0.18.1
-- Multicast >= 0.1.1 (nimble)
+- Multicast >= 0.1.1 (nimble install multicast)
+- Nimcrypto >= 0.3.2 (nimble install nimcrypto)
 
-**Other**
-- Python >= 3 (system)
-- pycrypto (used for writing to the Xiaomi devices)
-
-```
-git clone https://github.com/dlitz/pycrypto.git
-python3 setup.py build
-python3 setup.py install
-```
 
 # Devices
 Xiaomi IOT devices are supported. The following devices has been thoroughly tested:
@@ -40,7 +32,7 @@ But before we get started, you need to acquire your devices SID.
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 echo xiaomiGatewayGetSid()
 ```
 
@@ -48,7 +40,7 @@ echo xiaomiGatewayGetSid()
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 echo xiaomiDiscover()
 ```
 
@@ -60,7 +52,7 @@ There are numerous ways to read. Some proc's just read the next message, some wa
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 echo xiaomiReadMessage()
 ```
 
@@ -68,7 +60,7 @@ echo xiaomiReadMessage()
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 echo xiaomiReadDevice("device-SID")
 ```
 
@@ -77,7 +69,7 @@ This will await that the cmd = "heartbeat" and the model = "gateway".
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 echo xiaomiReadCustom("heartbeat", "gateway")
 ```
 
@@ -85,7 +77,7 @@ echo xiaomiReadCustom("heartbeat", "gateway")
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 xiaomiListenForever()
 ```
 
@@ -99,7 +91,7 @@ For magnet sensors you will receive a report when they are connected (`close`) a
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 xiaomiReportAck()
 ```
 
@@ -107,13 +99,13 @@ xiaomiReportAck()
 ```nim
 import xiaomi
 
-xiaomiInit()
+xiaomiConnect()
 xiaomiReportAck("device-SID")
 ```
 
 
 # Write to a device
-To write to a device, we need to exchange an encrypted key with the gateway based on a ever-changing token. We are currently using a Python script to generate the encrypted key from the token.
+To write to a device, we need to exchange an encrypted key with the gateway based on a ever-changing token. We are utilizing nimcrypto AES CBC 128 to do this.
 
 
 ## Gateway password
@@ -230,7 +222,7 @@ xiaomiGatewayPassword = "gbbwsi3apkgd1ls2"
 proc connectToXiaomi() =
   ## You neeed to connect as the first thing
 
-  xiaomiInit()
+  ()
 
 
 proc getGatewayInfo() =
@@ -317,7 +309,7 @@ proc listenForever() =
   ## Get all Xiaomi messages
 
   xiaomiListenForever()
-  xiaomiClose()
+  xiaomiDisconnect()
 
 
 proc listenForeverAndUpdateToken() =
@@ -326,7 +318,7 @@ proc listenForeverAndUpdateToken() =
   while true:
     echo xiaomiUpdateToken(xiaomiReadMessage())
 
-  xiaomiClose()
+  xiaomiDisconnect()
 
 
 
@@ -337,5 +329,5 @@ connectToXiaomi()
 discoverDevices()
 
 # Close the connection
-xiaomiClose()
+xiaomiDisconnect()
 ```

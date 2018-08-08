@@ -10,3 +10,4 @@ srcDir        = "src"
 
 requires "nim >= 0.18.1"
 requires "multicast >= 0.1.1"
+requires "nimcrypto >= 0.3.2"

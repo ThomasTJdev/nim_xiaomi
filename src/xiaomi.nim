@@ -2,6 +2,7 @@ import asyncdispatch
 import json
 import net
 import multicast
+import nimcrypto
 import os
 import osproc
 import strutils
@@ -29,16 +30,26 @@ template jn(json: JsonNode, data: string): string =
   try: json[data].getStr() except: ""
 
 
-proc xiaomiSecret(): string =
-  ## Return the Xiaomi secret for writing
+proc xiaomiSecretUpdate*(password = xiaomiGatewayPassword, token = xiaomiGatewayToken) =
+  ## Update encrypt the secret for writing
 
-  return execProcess("python3 " & getAppDir() & "/xiaomi_key.py " & xiaomiGatewayPassword & " " & xiaomiGatewayToken)
+  if password.len() == 0 or token.len() == 0:
+    xiaomiGatewayPassword = "" 
 
+  var secret = ""
+  var key = nimcrypto.fromHex(toHex(password))
+  var iv = nimcrypto.fromHex("17996d093d28ddb3ba695a2e6f58562e")
+  var ctx1: CBC[aes128]
+  ctx1.init(key, iv)
+  var plain = nimcrypto.fromHex(toHex(token))
+  let length = len(plain)
+  var ecrypt = newSeq[uint8](length)
+  ctx1.encrypt(addr plain[0], addr ecrypt[0], uint(length))
+  secret = nimcrypto.toHex(ecrypt)
+  burnMem(ecrypt)
+  ctx1.clear()
 
-proc xiaomiSecretUpdate*() =
-  ## Update the Xiaomi secret for writing
-
-  xiaomiGatewaySecret = replace(execProcess("python3 " & getAppDir() & "/xiaomi_key.py " & xiaomiGatewayPassword & " " & xiaomiGatewayToken), "\n", "")
+  xiaomiGatewaySecret = secret
 
 
 proc xiaomiTokenRefresh*() =
@@ -259,13 +270,13 @@ proc xiaomiListenForever*() =
       echo xdata
 
   
-proc xiaomiClose*() =
+proc xiaomiDisconnect*() =
   ## Close connection to multicast
 
   discard xiaomiSocket.leaveGroup(xiaomiMulticast) == true
 
 
-proc xiaomiInit*() =
+proc xiaomiConnect*() =
   ## Initialize socket
   
   xiaomiSocket = newSocket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
