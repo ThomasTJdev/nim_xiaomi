@@ -100,7 +100,7 @@ xiaomiReportAck()
 import xiaomi
 
 xiaomiConnect()
-xiaomiReportAck("device-SID")
+xiaomiReadReport("device-SID")
 ```
 
 
@@ -137,6 +137,15 @@ xiaomiTokenRefresh()
 xiaomiSecretUpdate()
 ```
 
+**OR**
+```nim
+xiaomiTokenRefresh(true)
+```
+
+**OR while writing**
+```nim
+xiaomiWrite("device-SID", "message", true)
+```
 
 ## Gateway writing options
 There are 2 main elements you can write to the gateway - the light and sound.
@@ -147,7 +156,7 @@ import xiaomi
 
 xiaomiGatewayPassword = "secretPassword"
 xiaomiTokenRefresh()
-xiaomiSendWriteCmd(xiaomiGatewaySid, "\"rgb\": 4294914304")
+xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 4294914304")
 ```
 
 ### Light options
@@ -168,7 +177,7 @@ import xiaomi
 
 xiaomiGatewayPassword = "secretPassword"
 xiaomiTokenRefresh()
-xiaomiSendWriteCmd(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
+xiaomiWrite(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
 ```
 
 ### Sound options
@@ -243,32 +252,32 @@ proc startSound() =
   ## Play sound number 7 with volume level 4
 
   # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh()
-  xiaomiSendWriteCmd(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
+  xiaomiTokenRefresh(true)
+  xiaomiWrite(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
 
 
 proc stopSound() =
   ## Stop sound
 
   # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh()
-  xiaomiSendWriteCmd(xiaomiGatewaySid, "\"mid\": 10000")
+  xiaomiTokenRefresh(true)
+  xiaomiWrite(xiaomiGatewaySid, "\"mid\": 10000")
 
 
 proc lightRed() =
   ## Set red light on gateway
 
   # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh()
-  xiaomiSendWriteCmd(xiaomiGatewaySid, "\"rgb\": 4294914304")
+  xiaomiTokenRefresh(true)
+  xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 4294914304")
 
 
 proc lightOff() =
   ## Set red light on gateway
 
   # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh()
-  xiaomiSendWriteCmd(xiaomiGatewaySid, "\"rgb\": 0")
+  xiaomiTokenRefresh(true)
+  xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 0")
 
 
 proc discoverDevices() =
@@ -289,7 +298,7 @@ proc askforDeviceStatus() =
   ## ask the device for sending a message with
   ## it's status and the cmd = read_ack
 
-  xiaomiSendReadCmd("device-sid")
+  xiaomiSendRead("device-sid")
 
 
 proc getDeviceStatus() =
@@ -302,7 +311,7 @@ proc getDeviceStatus() =
 proc sendCustomMessage() =
   ## Get information on the gateway
 
-  xiaomiSendCmd("{\"cmd\": \"whois\"}")
+  xiaomiSend("{\"cmd\": \"whois\"}")
 
 
 proc listenForever() =

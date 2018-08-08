@@ -19,7 +19,7 @@ var xiaomiGatewaySecret* = ""
 var xdata: string = ""
 var xaddress: string = ""
 var xport: Port
-var xiaomiSocket: Socket
+var xiaomiSocket*: Socket
 
 
 template jn(json: JsonNode, data: string): string =
@@ -49,7 +49,7 @@ proc xiaomiSecretUpdate*(password = xiaomiGatewayPassword, token = xiaomiGateway
   xiaomiGatewaySecret = secret
 
 
-proc xiaomiTokenRefresh*() =
+proc xiaomiTokenRefresh*(updateKey = false) =
   ## Wait for updated Gateway token.
   ## This does also populate the gateway sid.
 
@@ -58,18 +58,21 @@ proc xiaomiTokenRefresh*() =
     if jn(js, "cmd") == "heartbeat" and jn(js, "token") != "":
       xiaomiGatewaySid = jn(js, "sid")
       xiaomiGatewayToken = jn(js, "token")
+      if updateKey:
+        xiaomiSecretUpdate()
       break
 
 
-proc xiaomiSendWriteCmd*(sid, message: string) =
+proc xiaomiWrite*(sid, message: string, updateKey = false) =
   ## Send a write command to the
   ## specified "sid" with a "message".
 
-  xiaomiSecretUpdate()
+  if updateKey:
+    xiaomiSecretUpdate()
   discard xiaomiSocket.sendTo(xiaomiMulticast, xiaomiPort, "{\"cmd\": \"write\", \"sid\": \"" & sid & "\", \"data\": {\"key\": \"" & xiaomiGatewaySecret & "\", " & message & "} }")
 
 
-proc xiaomiSendReadCmd*(deviceSid: string) =
+proc xiaomiSendRead*(deviceSid: string) =
   ## Tell the device to reply with it's status.
   ## This proc does not read the reply, only
   ## ask the device for sending a message with
@@ -79,7 +82,7 @@ proc xiaomiSendReadCmd*(deviceSid: string) =
   discard xiaomiSocket.sendTo(xiaomiMulticast, xiaomiPort, command)
 
 
-proc xiaomiSendCmd*(message: string) =
+proc xiaomiSend*(message: string) =
   ## Send a custom message
 
   discard xiaomiSocket.sendTo(xiaomiMulticast, xiaomiPort, message)
@@ -158,7 +161,7 @@ proc xiaomiReadAck*(deviceSid = ""): string =
       return xdata
 
 
-proc xiaomiReportAck*(deviceSid = ""): string =
+proc xiaomiReadReport*(deviceSid = ""): string =
   ## Return next message with
   ## cmd = "report". This is useful
   ## if you are waiting for a sensor
