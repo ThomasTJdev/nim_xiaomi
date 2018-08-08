@@ -92,7 +92,7 @@ For magnet sensors you will receive a report when they are connected (`close`) a
 import xiaomi
 
 xiaomiConnect()
-xiaomiReportAck()
+echo xiaomiReportAck()
 ```
 
 ## Read next report for device
@@ -100,7 +100,7 @@ xiaomiReportAck()
 import xiaomi
 
 xiaomiConnect()
-xiaomiReadReport("device-SID")
+echo xiaomiReadReport("device-SID")
 ```
 
 
