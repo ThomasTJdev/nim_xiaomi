@@ -1,10 +1,7 @@
-import asyncdispatch
 import json
 import net
 import multicast
 import nimcrypto
-import os
-import osproc
 import strutils
 
 
@@ -14,7 +11,7 @@ const xiaomiPort = Port(9898)
 const xiaomiMsgLen = 1024
 
 
-# Var's used in socket
+# Variables
 var xiaomiGatewayPassword* = "" # This is required for writing
 var xiaomiGatewaySid* = ""
 var xiaomiGatewayToken* = ""
