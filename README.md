@@ -105,7 +105,7 @@ xiaomiReportAck("device-SID")
 
 
 # Write to a device
-To write to a device, we need to exchange an encrypted key with the gateway based on a ever-changing token. We are utilizing nimcrypto AES CBC 128 to do this.
+To write to a device, we need to exchange an encrypted key with the gateway based on an ever-changing token. We are utilizing nimcrypto AES CBC 128 to do this.
 
 
 ## Gateway password
