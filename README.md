@@ -1,22 +1,23 @@
-# Xiaomi
-This Nim package includes proc's for working with Xiaomi devices.
+*This README was generated with [Nim to Markdown](https://github.com/ThomasTJdev/nimtomd)*
 
-# Requirements
-**Nim:**
-- Nim >= 0.18.1
-- Multicast >= 0.1.1 (nimble install multicast)
-- Nimcrypto >= 0.3.2 (nimble install nimcrypto)
+# XIAOMI
 
+Library for working with Xiaomi IOT devices.
 
-# Devices
+## Requirements
+
+- nim >= 0.19.9
+- multicast >= 0.1.1
+- nimcrypto >= 0.3.2
+
+## Devices
 Xiaomi IOT devices are supported. The following devices has been thoroughly tested:
 
-- [Gateway](https://www.lightinthebox.com/en/p/xiao-mi-multi-function-gateway-16-million-color-night-light-remote-control-connect-other-intelligent-devices_p5362296.html?prm=1.18.104.0)
-- [Door/window sensor](https://www.lightinthebox.com/en/p/xiao-mi-door-and-window-sensor-millet-intelligent-home-suite-household-door-and-window-alarm-used-with-multi-function-gateway_p5362299.html?prm=1.18.104.0)
-- [PIR sensor](https://www.lightinthebox.com/en/p/xaomi-aqara-human-body-sensor-infrared-detector-platform-infrared-detectorforhome_p6599215.html?prm=1.18.104.0)
+  - [Gateway](https://www.lightinthebox.com/en/p/xiao-mi-multi-function-gateway-16-million-color-night-light-remote-control-connect-other-intelligent-devices_p5362296.html?prm=1.18.104.0)
+  - [Door/window sensor](https://www.lightinthebox.com/en/p/xiao-mi-door-and-window-sensor-millet-intelligent-home-suite-household-door-and-window-alarm-used-with-multi-function-gateway_p5362299.html?prm=1.18.104.0)
+  - [PIR sensor](https://www.lightinthebox.com/en/p/xaomi-aqara-human-body-sensor-infrared-detector-platform-infrared-detectorforhome_p6599215.html?prm=1.18.104.0)
 
-
-# Working with Xiaomi
+## Working with Xiaomi
 You can interact with the Xiaomi devices in 3 ways:
 1) **Read** - Asking for a status, e.g. is the door open (door sensor)
 2) **Report** - Awaiting an action, e.g. when the door opens, it sends a notification (door sensor)
@@ -24,84 +25,91 @@ You can interact with the Xiaomi devices in 3 ways:
 
 All you Xiaomi devices are connected to a gateway. It is through this gateway, we are communicating with each of the devices. Each devices is identified with a SID.
 
+# Examples (basic)
 
-# Discover devices
+## Discover devices
 But before we get started, you need to acquire your devices SID.
 
-## Get the gateways SID
+**Get the gateways SID**
 ```nim
-import xiaomi
-
-xiaomiConnect()
-echo xiaomiGatewayGetSid()
-```
-
-## Get the devices SID
-```nim
-import xiaomi
-
-xiaomiConnect()
-echo xiaomiDiscover()
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiGatewayGetSid()
 ```
 
 
-# Read
+
+**Get the devices SID**
+```nim
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiDiscover()
+```
+
+
+
+## Read
 There are numerous ways to read. Some proc's just read the next message, some waits for a specific device, etc.
 
-## Read the next message sent
+**Read the next message sent**
 ```nim
-import xiaomi
-
-xiaomiConnect()
-echo xiaomiReadMessage()
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiReadMessage()
 ```
 
-## Request a device status and read the reply
-```nim
-import xiaomi
 
-xiaomiConnect()
-echo xiaomiReadDevice("device-SID")
+
+**Request a device status and read the reply**
+```nim
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiReadDevice("device-SID")
 ```
 
-## Read the next message from custom-x
+
+
+**Read the next message from custom-x**
 This will await that the cmd = "heartbeat" and the model = "gateway".
 ```nim
-import xiaomi
-
-xiaomiConnect()
-echo xiaomiReadCustom("heartbeat", "gateway")
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiReadCustom("heartbeat", "gateway")
 ```
 
-## Read messages forever
+
+
+**Read messages forever**
 ```nim
-import xiaomi
-
-xiaomiConnect()
-xiaomiListenForever()
+ import xiaomi
+ xiaomiConnect()
+ xiaomiListenForever()
 ```
 
 
-# Report
+
+## Report
+
 For PIR sensors you will receive a report, when there's motion or there hasn't been motion for 300 seconds.
 
 For magnet sensors you will receive a report when they are connected (`close`) and disconnected (`open`).
 
-## Read next report
+**Read next report**
 ```nim
-import xiaomi
-
-xiaomiConnect()
-echo xiaomiReportAck()
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiReportAck()
 ```
 
-## Read next report for device
-```nim
-import xiaomi
 
-xiaomiConnect()
-echo xiaomiReadReport("device-SID")
+
+**Read next report for device**
+```nim
+ import xiaomi
+ xiaomiConnect()
+ echo xiaomiReadReport("device-SID")
 ```
+
 
 
 # Write to a device
@@ -124,42 +132,54 @@ But before we can generate the key, you need to gather you gateway password. Fol
 
 ## Setting the password
 If you need to write to a device, insert your password in the global variable at the top of your code:
+
 ```nim
-xiaomiGatewayPassword = "secretPassword"
+ xiaomiGatewayPassword = "secretPassword"
 ```
+
+
 
 ## Getting the encrypted key
 The gateways token is changing all the time. You therefore need to the generate the encrypted key before each writing.
 
 This is done with:
 ```nim
-xiaomiTokenRefresh()
-xiaomiSecretUpdate()
+ xiaomiTokenRefresh()
+ xiaomiSecretUpdate()
 ```
+
+
 
 **OR**
 ```nim
-xiaomiTokenRefresh(true)
+ xiaomiTokenRefresh(true)
 ```
+
+
 
 **OR while writing**
 ```nim
-xiaomiWrite("device-SID", "message", true)
+ xiaomiWrite("device-SID", "message", true)
 ```
+
+
 
 ## Gateway writing options
 There are 2 main elements you can write to the gateway - the light and sound.
 
-### Light writing
-```nim
-import xiaomi
+**Light writing**
 
-xiaomiGatewayPassword = "secretPassword"
-xiaomiTokenRefresh()
-xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 4294914304")
+```nim
+ import xiaomi
+ xiaomiGatewayPassword = "secretPassword"
+ xiaomiTokenRefresh()
+ xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 4294914304")
 ```
 
-### Light options
+
+
+**Light options**
+
 To assign a RGB color, you have to use the Android() color format.
 
 You can convert HEX to Android() at this [website](https://convertingcolors.com/android-color-4294914304.html).
@@ -171,16 +191,20 @@ You can convert HEX to Android() at this [website](https://convertingcolors.com/
 - Blue = `4283327469`
 - Off = `0`
 
-### Sound writing
-```nim
-import xiaomi
 
-xiaomiGatewayPassword = "secretPassword"
-xiaomiTokenRefresh()
-xiaomiWrite(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
+**Sound writing**
+
+```nim
+ import xiaomi
+ xiaomiGatewayPassword = "secretPassword"
+ xiaomiTokenRefresh()
+ xiaomiWrite(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
 ```
 
-### Sound options
+
+
+**Sound options**
+
 The volume is in percentage, whereas 10 = 100%.
 
 The following sounds are available:
@@ -213,130 +237,110 @@ Alarm clock
 - 27 - MusicBox
 - 28 - Orange
 - 29 - Thinker
-
-
-
-# Example
+# Types
+## Procs
+### proc xiaomiSecretUpdate*
 ```nim
-import json
-import xiaomi
-
-
-# To be able to write to the gateway,
-# you need to find your gateway password.
-# Follow this guide: https://github.com/ThomasTJdev/nim_homeassistant/wiki/Xiaomi#gateway-password
-xiaomiGatewayPassword = "gbbwsi3apkgd1ls2"
-
-
-proc connectToXiaomi() =
-  ## You neeed to connect as the first thing
-
-  xiaomiConnect()
-
-
-proc getGatewayInfo() =
-  ## Get information on the gateway.
-  ## This will return a heartbeat from
-  ## the gateway.
-
-  echo xiaomiReadCustom("heartbeat", "gateway")
-
-
-proc getGatewaySid(): string =
-  ## Get the gateway SID
-
-  return xiaomiGatewayGetSid()
-
-
-proc startSound() =
-  ## Play sound number 7 with volume level 4
-
-  # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh(true)
-  xiaomiWrite(xiaomiGatewaySid, "\"mid\": 7, \"vol\": 4")
-
-
-proc stopSound() =
-  ## Stop sound
-
-  # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh(true)
-  xiaomiWrite(xiaomiGatewaySid, "\"mid\": 10000")
-
-
-proc lightRed() =
-  ## Set red light on gateway
-
-  # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh(true)
-  xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 4294914304")
-
-
-proc lightOff() =
-  ## Set red light on gateway
-
-  # Refresh token does also update the gateway sid
-  xiaomiTokenRefresh(true)
-  xiaomiWrite(xiaomiGatewaySid, "\"rgb\": 0")
-
-
-proc discoverDevices() =
-  ## Auto discover all connected devices
-
-  echo xiaomiDiscover()
-
-
-proc readNextMessage() =
-  ## Read the next message
-
-  echo xiaomiReadMessage()
-
-
-proc askforDeviceStatus() =
-  ## Tell the device to reply with it's status.
-  ## This proc does not read the reply, only
-  ## ask the device for sending a message with
-  ## it's status and the cmd = read_ack
-
-  xiaomiSendRead("device-sid")
-
-
-proc getDeviceStatus() =
-  ## Tell the device to reply with status.
-  ## and get the reply.
-
-  echo xiaomiReadDevice("device-sid")
-
-
-proc sendCustomMessage() =
-  ## Get information on the gateway
-
-  xiaomiSend("{\"cmd\": \"whois\"}")
-
-
-proc listenForever() =
-  ## Get all Xiaomi messages
-
-  xiaomiListenForever()
-  xiaomiDisconnect()
-
-
-proc listenForeverAndUpdateToken() =
-  ## Get all Xiaomi messages and update token
-
-  while true:
-    echo xiaomiUpdateToken(xiaomiReadMessage())
-
-  xiaomiDisconnect()
-
-
-
-# Connect
-connectToXiaomi()
-
-# Discover devices
-discoverDevices()
-
-# Close the connection
-xiaomiDisconnect()
+proc xiaomiSecretUpdate*(password = xiaomiGatewayPassword, token = xiaomiGatewayToken) =
 ```
+Update encrypt the secret for writing
+### proc xiaomiTokenRefresh*
+```nim
+proc xiaomiTokenRefresh*(updateKey = false) =
+```
+Wait for updated Gateway token.
+This does also populate the gateway sid.
+### proc xiaomiWrite*
+```nim
+proc xiaomiWrite*(sid, message: string, updateKey = false) =
+```
+Send a write command to the
+specified "sid" with a "message".
+### proc xiaomiSendRead*
+```nim
+proc xiaomiSendRead*(deviceSid: string) =
+```
+Tell the device to reply with it's status.
+This proc does not read the reply, only
+ask the device for sending a message with
+it's status and the cmd = read_ack.
+### proc xiaomiSend*
+```nim
+proc xiaomiSend*(message: string) =
+```
+Send a custom message
+### proc xiaomiReadMessage*
+```nim
+proc xiaomiReadMessage*(): string =
+```
+Read a single Xiaomi message
+and return it.
+### proc xiaomiReadCustom*
+```nim
+proc xiaomiReadCustom*(cmd = "", model = "", sid = ""): string =
+```
+Tell the device to reply with status.
+and return the reply if the custom
+parameters are fulfilled.
+It is optional to specify the parameters.
+Example:
+  cmd => heartbeat
+  model => gateway
+### proc xiaomiReadDevice*
+```nim
+proc xiaomiReadDevice*(deviceSid: string): string =
+```
+Tell the device to reply with it's status
+and return the reply.
+### proc xiaomiReadAck*
+```nim
+proc xiaomiReadAck*(deviceSid = ""): string =
+```
+Return next message with
+cmd = "read_ack". This is useful
+after telling a device to reply
+with it's status
+### proc xiaomiReadReport*
+```nim
+proc xiaomiReadReport*(deviceSid = ""): string =
+```
+Return next message with
+cmd = "report". This is useful
+if you are waiting for a sensor
+to reply with a change
+### proc xiaomiGatewayGetSid*
+```nim
+proc xiaomiGatewayGetSid*(): string =
+```
+Get the gateway's sid
+### proc xiaomiGatewayGetToken*
+```nim
+proc xiaomiGatewayGetToken*(): string =
+```
+Get the gateway's token
+### proc xiaomiDiscover*
+```nim
+proc xiaomiDiscover*(): string =
+```
+Discover xiaomi devices
+### proc xiaomiUpdateToken*
+```nim
+proc xiaomiUpdateToken*(message: string): string =
+```
+Updates the gateway token if
+possible and returns the data
+### proc xiaomiListenForever*
+```nim
+proc xiaomiListenForever*() =
+```
+Listen for Xiaomi mesages
+### proc xiaomiDisconnect*
+```nim
+proc xiaomiDisconnect*() =
+```
+Close connection to multicast
+### proc xiaomiConnect*
+```nim
+proc xiaomiConnect*() =
+```
+Initialize socket
