@@ -446,7 +446,7 @@ proc xiaomiDiscover*(): string =
     let command = "{\"cmd\":\"read\", \"sid\":\"" & sid & "\"}"
     xiaomiSocket.sendTo(xiaomiMulticast, xiaomiPort, command)
     while xiaomiSocket.recvFrom(xdata, xiaomiMsgLen, xaddress, xport) > 0:
-      if jn(parseJson(xdata), "cmd") == "read" or xdata.len() == 0:
+      if jn(parseJson(xdata), "cmd") == "read" or xdata.len() == 0 or jn(parseJson(xdata), "cmd") == "heartbeat":
         continue
 
       let json = parseJson(xdata)
