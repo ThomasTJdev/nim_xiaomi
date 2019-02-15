@@ -8,6 +8,6 @@ srcDir        = "src"
 
 # Dependencies
 
-requires "nim >= 0.19.9"
+requires "nim >= 0.19.0"
 requires "multicast >= 0.1.1"
 requires "nimcrypto >= 0.3.2"
