@@ -18,6 +18,7 @@
 ##   - [Gateway](https://www.lightinthebox.com/en/p/xiao-mi-multi-function-gateway-16-million-color-night-light-remote-control-connect-other-intelligent-devices_p5362296.html?prm=1.18.104.0)
 ##   - [Door/window sensor](https://www.lightinthebox.com/en/p/xiao-mi-door-and-window-sensor-millet-intelligent-home-suite-household-door-and-window-alarm-used-with-multi-function-gateway_p5362299.html?prm=1.18.104.0)
 ##   - [PIR sensor](https://www.lightinthebox.com/en/p/xaomi-aqara-human-body-sensor-infrared-detector-platform-infrared-detectorforhome_p6599215.html?prm=1.18.104.0)
+##   - [Temperature & Humidity sensor](https://www.lightinthebox.com/en/p/original-xiaomi-temperature-and-humidity-sensor-real-time-monitoring-of-temperature-and-humidity-changes_p5376891.html?prm=1.18.104.0)
 ##
 ## Working with Xiaomi
 ## ==================
