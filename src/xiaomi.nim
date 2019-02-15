@@ -7,7 +7,7 @@
 ## Requirements
 ## ============
 ##
-## - nim >= 0.19.9
+## - nim >= 0.19.0
 ## - multicast >= 0.1.1
 ## - nimcrypto >= 0.3.2
 ##
