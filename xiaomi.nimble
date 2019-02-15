@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.2"
+version       = "0.1.4"
 author        = "Thomas T. Jarløv (https://github.com/ThomasTJdev"
 description   = "Library for working with Xiaomi devices"
 license       = "MIT"
